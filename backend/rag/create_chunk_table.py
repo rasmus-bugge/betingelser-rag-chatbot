@@ -25,4 +25,14 @@ with engine.begin() as connection:
 
 # 2) Create the document_chunks table. checkfirst=True = skip if it already exists.
 DocumentChunk.__table__.create(engine, checkfirst=True)
+
+# 3) "create" never changes a table that already exists, so columns added after the
+#    first version need an ALTER TABLE. IF NOT EXISTS makes this safe to run again.
+with engine.begin() as connection:
+    connection.execute(text(
+        "ALTER TABLE document_chunks "
+        "ADD COLUMN IF NOT EXISTS variant VARCHAR(100) NOT NULL DEFAULT '', "
+        "ADD COLUMN IF NOT EXISTS language VARCHAR(5) NOT NULL DEFAULT 'da', "
+        "ADD COLUMN IF NOT EXISTS section TEXT NOT NULL DEFAULT ''"
+    ))
 print("Table document_chunks is ready.")

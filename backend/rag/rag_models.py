@@ -31,8 +31,12 @@ class DocumentChunk(Base):
     file: Mapped[str] = mapped_column(String(255))       # "betingelser-cyberforsikring.pdf"
     doc_type: Mapped[str] = mapped_column(String(50))    # "Betingelser" or "Produktinformation"
     product: Mapped[str] = mapped_column(String(255))    # "Cyberforsikring"
+    variant: Mapped[str] = mapped_column(String(100))    # "2303", or "" if only one version
+    language: Mapped[str] = mapped_column(String(5))     # "da" or "en"
     page: Mapped[int]                                    # page where the chunk STARTS
     chunk_number: Mapped[int]                            # 0, 1, 2 ... within its file
+    # The headings above the chunk, e.g. "6000 Svamp > 6013 Forsikringen dækker ikke".
+    section: Mapped[str] = mapped_column(Text)
 
     # --- The content ---
     # Text (not String) = unlimited length. Our chunks are ~1000 characters.

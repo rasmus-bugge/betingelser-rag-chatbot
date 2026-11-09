@@ -74,11 +74,7 @@
   {
     "question": "Dækker varebilforsikringen, hvis chaufføren ikke har kørekort?",
     "type": "paraphrase",
-    "files": [
-      "betingelser-varebilforsikring.pdf",
-      "betingelser-varebilforsikring-1906.pdf",
-      "betingelser-varebilforsikring-va13.pdf"
-    ],
+    "files": ["betingelser-varebilforsikring.pdf", "betingelser-varebilforsikring-1906.pdf", "betingelser-varebilforsikring-va13.pdf"],
     "must_contain": "kørekort"
   },
   {
@@ -98,5 +94,23 @@
     "type": "easy",
     "files": ["betingelser-patientforsikring.pdf"],
     "must_contain": "under deres varetagelse af patientbehandling"
+  },
+  {
+    "question": "Er råd dækket på bygningsforsikringen?",
+    "type": "wordsense",
+    "files": ["betingelser-bygningsforsikring.pdf", "betingelser-bygningsforsikring-allrisks.pdf"],
+    "must_contain": "6013.10 Råd"
+  },
+  {
+    "question": "Dækker bygningsforsikringen svamp og råd, der opstår efter at regnvand er trængt ind?",
+    "type": "exclusion",
+    "files": ["betingelser-bygningsforsikring.pdf"],
+    "must_contain": "Følgeskader i form af svamp, skimmelsvamp og råd"
+  },
+  {
+    "question": "Kan jeg få dækket råd i træværket på landboforsikringen?",
+    "type": "wordsense",
+    "files": ["forsikringsbetingelser-667.pdf"],
+    "must_contain": "Skade som følge af råd. Råd er skader på træ"
   }
 ]

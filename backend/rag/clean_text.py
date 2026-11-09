@@ -50,6 +50,54 @@ SPLIT_WORD_PATTERN_2 = re.compile(r"(\w)-[ \t]*\n(?=[a-zæøå])")
 # \b = a word boundary, so we don't touch letters inside other words.
 SPLIT_TRYG_PATTERN = re.compile(r"\bT ryg\b")
 
+# --- Pattern 4: table-of-contents lines ----------------------------------------------
+# A contents line is a heading followed by a page number: "5.4.5 Karenstid 6".
+# Such lines contain every heading in the document but answer nothing, so they
+# match almost any question and push real answers down the result list.
+# Reading the pattern:
+#   [A-Za-zæøåÆØÅ)\-]   a letter (or ")" or "-") ...
+#   \s+                 ... then space(s) ...
+#   \d{1,3}\s*$         ... then a 1-3 digit number at the very END of the line.
+TOC_LINE_PATTERN = re.compile(r"[A-Za-zæøåÆØÅ)\-]\s+\d{1,3}\s*$")
+
+# The labels that sit around a table of contents: "Indholdsfortegnelse", "Side  Side  Side".
+TOC_LABEL_PATTERN = re.compile(
+    r"^\s*(Indholdsfortegnelse|Indhold|Contents|Table of contents|(Side\s*)+|(Page\s*)+)\s*$",
+    re.IGNORECASE,
+)
+
+# A page counts as a contents page when it has at least 9 contents-lines AND they
+# make up at least a quarter of the page. (Measured on all 982 pages: 57 pages pass,
+# all of them real tables of contents. A normal page has only a stray line or two
+# that happens to end in a number, so it is left alone.)
+TOC_MIN_LINES = 9
+TOC_MIN_SHARE = 0.25
+
+
+def remove_contents_lines(lines: list[str]) -> list[str]:
+    """If the page holds a table of contents, remove the contents-lines and keep
+    everything else. We remove LINES, not the whole page, because some contents
+    pages also hold real text (an introduction, or even the first clauses).
+
+    Known weakness: a contents entry that wraps over two lines leaves its first
+    half behind ("1.4 Ændring af forsikringsbetingelser og"), because only the
+    second half ends in a page number."""
+
+    real_lines = [line for line in lines if line.strip()]          # ignore empty lines
+    toc_lines = [line for line in real_lines if TOC_LINE_PATTERN.search(line)]
+
+    is_contents_page = (
+        len(toc_lines) >= TOC_MIN_LINES
+        and len(toc_lines) / len(real_lines) >= TOC_MIN_SHARE
+    )
+    if not is_contents_page:
+        return lines   # a normal page: change nothing
+
+    return [
+        line for line in lines
+        if not TOC_LINE_PATTERN.search(line) and not TOC_LABEL_PATTERN.match(line)
+    ]
+
 
 def clean_page(raw_text: str) -> tuple[str, str]:
     """Clean one page of raw text.
@@ -68,6 +116,9 @@ def clean_page(raw_text: str) -> tuple[str, str]:
     if lines and HEADER_PATTERN.match(lines[0]):
         header = lines[0].strip()   # save it
         lines = lines[1:]           # drop it from the text (everything except the first line)
+
+    # If this is a table-of-contents page, drop the contents-lines.
+    lines = remove_contents_lines(lines)
 
     # Glue the lines back together into one string, with line breaks between them.
     body = "\n".join(lines)

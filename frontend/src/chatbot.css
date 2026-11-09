@@ -60,6 +60,22 @@
   font-weight: 500;
 }
 
+.bubble-answer {
+  margin: 0;
+  padding: 10px 14px;
+  border-left: 3px solid var(--accent-soft);
+  line-height: 1.5;
+  white-space: pre-wrap; /* keep the line breaks the answer was written with */
+}
+
+.references {
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
 .hits-title {
   margin: 0 0 10px;
   font-size: 14px;

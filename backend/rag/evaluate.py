@@ -25,14 +25,21 @@
 import json
 from pathlib import Path
 
-from sqlalchemy import select
-from sqlalchemy.orm import Session
-
-from database import engine
-from rag.rag_models import DocumentChunk
-from rag.search import search_chunks
+from rag.embeddings import embed_query
+from rag.search import current_store, search_chunks
 
 QUESTIONS_FILE = Path(__file__).resolve().parent / "eval_questions.json"
+# The chunks as the chunker saved them. Used only to check that each test question
+# points at a chunk that really exists.
+CHUNKS_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "chunks_v1.jsonl"
+
+# SAVED QUESTION VECTORS. The embedding service does not return exactly the same
+# numbers every time: embed the same question twice and the two vectors are 99.99 %
+# alike, not 100 %. That tiny wobble is enough to swap two chunks whose scores are
+# almost tied, so a question can be rank 4 in one run and rank 7 in the next.
+# To compare two runs fairly, we embed each question ONCE, save the vector in this
+# file, and reuse it. (Delete the file to embed the questions afresh.)
+VECTORS_FILE = CHUNKS_FILE.parent / "eval_question_vectors.json"
 
 # How far down the result list we look for the right chunk.
 SEARCH_DEPTH = 30
@@ -56,38 +63,52 @@ def main() -> None:
     with open(QUESTIONS_FILE, encoding="utf-8") as f:
         items = json.load(f)
 
+    with open(CHUNKS_FILE, encoding="utf-8") as f:
+        all_chunks = [json.loads(line) for line in f]
+
+    # Load the saved question vectors (an empty dictionary the first time).
+    saved_vectors: dict[str, list[float]] = {}
+    if VECTORS_FILE.exists():
+        with open(VECTORS_FILE, encoding="utf-8") as f:
+            saved_vectors = json.load(f)
+
     ranks: list[int | None] = []   # for each question: the rank found, or None = not in top 30
 
-    with Session(engine) as session:
-        print(f"{'rank':>5}  {'type':<11} question")
-        print("-" * 100)
+    print(f"Vector store: {current_store()}\n")
+    print(f"{'rank':>5}  {'type':<11} question")
+    print("-" * 100)
 
-        for item in items:
-            # SANITY CHECK: does the right chunk exist in the database at all?
-            # If not, the test question itself is broken (e.g. a typo in must_contain),
-            # and counting it as a "miss" would blame the search unfairly.
-            stored = session.execute(
-                select(DocumentChunk.file, DocumentChunk.text)
-                .where(DocumentChunk.file.in_(item["files"]))
-            ).all()
-            candidates = sum(1 for file, text in stored if is_right_chunk(file, text, item))
-            if candidates == 0:
-                print(f"{'??':>5}  {item['type']:<11} {item['question']}")
-                print("       ^ BROKEN TEST: no stored chunk matches must_contain. Skipped.")
-                continue
+    for item in items:
+        # SANITY CHECK: does the right chunk exist at all?
+        # If not, the test question itself is broken (e.g. a typo in must_contain),
+        # and counting it as a "miss" would blame the search unfairly.
+        candidates = sum(1 for c in all_chunks if is_right_chunk(c["file"], c["text"], item))
+        if candidates == 0:
+            print(f"{'??':>5}  {item['type']:<11} {item['question']}")
+            print("       ^ BROKEN TEST: no chunk matches must_contain. Skipped.")
+            continue
 
-            # Run the real search and look for the right chunk in the results.
-            hits = search_chunks(session, item["question"], limit=SEARCH_DEPTH)
-            rank = None
-            for position, hit in enumerate(hits, start=1):
-                if is_right_chunk(hit["file"], hit["text"], item):
-                    rank = position
-                    break
-            ranks.append(rank)
+        # Use the saved vector for this question, or embed it now and save it.
+        question = item["question"]
+        if question not in saved_vectors:
+            saved_vectors[question] = embed_query(question)
 
-            shown = str(rank) if rank else f">{SEARCH_DEPTH}"
-            marker = "" if rank and rank <= TOP_K else "   <-- MISS"
-            print(f"{shown:>5}  {item['type']:<11} {item['question']}{marker}")
+        # Run the real search and look for the right chunk in the results.
+        hits = search_chunks(question, limit=SEARCH_DEPTH, question_vector=saved_vectors[question])
+        rank = None
+        for position, hit in enumerate(hits, start=1):
+            if is_right_chunk(hit["file"], hit["text"], item):
+                rank = position
+                break
+        ranks.append(rank)
+
+        shown = str(rank) if rank else f">{SEARCH_DEPTH}"
+        marker = "" if rank and rank <= TOP_K else "   <-- MISS"
+        print(f"{shown:>5}  {item['type']:<11} {item['question']}{marker}")
+
+    # Save the question vectors for the next run.
+    with open(VECTORS_FILE, "w", encoding="utf-8") as f:
+        json.dump(saved_vectors, f)
 
     # --- Summary ---
     total = len(ranks)

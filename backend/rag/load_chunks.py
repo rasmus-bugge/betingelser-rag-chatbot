@@ -29,12 +29,14 @@ CHUNKS_FILE = Path(__file__).resolve().parent.parent.parent / "data" / "chunks_v
 
 
 def text_to_embed(chunk: dict) -> str:
-    """The text we turn into a vector. We put the product name IN FRONT of the chunk,
-    so a chunk like '5.4.5 Karenstid ...' becomes 'Cyberforsikring (Betingelser): 5.4.5
-    Karenstid ...'. Now the vector knows WHICH insurance it is about; otherwise the
-    'Karenstid' of cyber and of loss-of-profit insurance would look identical.
+    """The text we turn into a vector. We put the product name and the section
+    headings IN FRONT of the chunk, so '5421.50 Følgeskader i form af svamp ...' becomes
+    'Bygningsforsikring. 5400 Udvidet vandskade > 5421.30 Forsikringen dækker ikke:
+    5421.50 Følgeskader ...'. Now the vector knows WHICH insurance the chunk is about
+    and WHERE in the document it sits.
     (We still store the ORIGINAL text in the database, without the prefix.)"""
-    return f"{chunk['product']} ({chunk['doc_type']}): {chunk['text']}"
+    product = f"{chunk['product']} {chunk['variant']}".strip()
+    return f"{product}. {chunk['section']}: {chunk['text']}"
 
 
 def main() -> None:
@@ -65,8 +67,11 @@ def main() -> None:
                     file=chunk["file"],
                     doc_type=chunk["doc_type"],
                     product=chunk["product"],
+                    variant=chunk["variant"],
+                    language=chunk["language"],
                     page=chunk["page"],
                     chunk_number=chunk["chunk_number"],
+                    section=chunk["section"],
                     text=chunk["text"],
                     embedding=vector,
                 )
