@@ -1,0 +1,20 @@
+# The libraries this project uses directly. Install with:
+#   python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+
+# --- Web API ---
+fastapi==0.162.0
+uvicorn[standard]==0.54.0
+
+# --- Database (PostgreSQL + pgvector) ---
+SQLAlchemy==2.1.8
+psycopg[binary]==3.3.8
+pgvector==0.5.1
+
+# --- Settings and HTTP calls (embeddings via OpenRouter) ---
+python-dotenv==1.2.4
+requests==2.34.2
+
+# --- Reading and chunking the PDFs ---
+pypdf==7.0.0
+cryptography==50.0.2            # pypdf needs it to open the encrypted PDFs
+langchain-text-splitters==1.1.3

@@ -1,0 +1,159 @@
+/* chatbot.css
+   The look of the chat page (Chatbot.tsx). It reuses the colour variables from
+   index.css (--surface, --border, --accent ...), so it matches the rest of the app. */
+
+.chat {
+  max-width: 860px;
+}
+
+/* The scrolling list of questions and answers */
+.chat-log {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-bottom: 24px;
+}
+
+/* Example questions shown before the first question */
+.chat-empty {
+  padding: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.chat-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.chat-examples button {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+.chat-examples button:hover {
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+/* One question plus its answer */
+.turn {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* The question bubble, pushed to the right */
+.bubble-question {
+  align-self: flex-end;
+  max-width: 80%;
+  padding: 10px 14px;
+  background: var(--accent-soft);
+  color: var(--brand);
+  border-radius: var(--radius) var(--radius) 2px var(--radius);
+  font-weight: 500;
+}
+
+.hits-title {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* One search result card */
+.hit {
+  margin-bottom: 10px;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.hit-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hit-rank {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--grey-soft);
+  color: var(--grey);
+  font-size: 12px;
+  font-weight: 600;
+}
+.hit-score {
+  margin-left: auto; /* pushes the score to the far right */
+  padding: 2px 8px;
+  border-radius: 6px;
+  background: var(--green-soft);
+  color: var(--green);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.hit-source {
+  margin: 4px 0 10px 32px;
+  word-break: break-all;
+}
+.hit-text {
+  margin: 0;
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap; /* keep the line breaks of the PDF text, wrap long lines */
+  overflow-wrap: anywhere;
+}
+
+/* The input box. "sticky" keeps it visible at the bottom while the log scrolls. */
+.chat-input {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  gap: 8px;
+  padding: 14px 0 8px;
+  background: var(--bg);
+}
+.chat-input input {
+  flex: 1;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+.chat-input input:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+.chat-input button {
+  padding: 0 20px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+.chat-input button:disabled {
+  background: var(--border);
+  color: var(--muted);
+  cursor: not-allowed;
+}

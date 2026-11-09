@@ -1,0 +1,102 @@
+[
+  {
+    "question": "Hvad er karenstid i cyberforsikringen?",
+    "type": "easy",
+    "files": ["betingelser-cyberforsikring.pdf"],
+    "must_contain": "Karenstiden er 12 timer"
+  },
+  {
+    "question": "Hvor lang er ventetiden før cyberforsikringen begynder at dække mit tab?",
+    "type": "paraphrase",
+    "files": ["betingelser-cyberforsikring.pdf"],
+    "must_contain": "Karenstiden er 12 timer"
+  },
+  {
+    "question": "Hvor lang tid efter cyberforsikringen er ophørt kan jeg stadig anmelde et tab?",
+    "type": "paraphrase",
+    "files": ["betingelser-cyberforsikring.pdf"],
+    "must_contain": "senere end 12 måneder efter forsikringens ophør"
+  },
+  {
+    "question": "Med hvilket varsel kan cyberforsikringen opsiges?",
+    "type": "easy",
+    "files": ["betingelser-cyberforsikring.pdf"],
+    "must_contain": "med en måneds varsel"
+  },
+  {
+    "question": "Betaler cyberforsikringen løsesum ved et ransomware-angreb?",
+    "type": "paraphrase",
+    "files": ["betingelser-cyberforsikring.pdf"],
+    "must_contain": "Ved løsesumsbetaling forstås"
+  },
+  {
+    "question": "Hvor mange procent af nyværdien får jeg for en 5 år gammel genstand på bygningsforsikringen?",
+    "type": "table",
+    "files": ["betingelser-bygningsforsikring.pdf"],
+    "must_contain": "andel af den skaderamte genstands nyværdi"
+  },
+  {
+    "question": "Hvor stor en del af udgiften dækker bygningsforsikringen ved skade på en 25 år gammel stikledning?",
+    "type": "table",
+    "files": ["betingelser-bygningsforsikring.pdf"],
+    "must_contain": "5130.20"
+  },
+  {
+    "question": "Hvad er det højeste beløb bygningsforsikringen betaler for at genetablere haven efter en skade på en stikledning?",
+    "type": "number",
+    "files": ["betingelser-bygningsforsikring.pdf"],
+    "must_contain": "715.565 kr"
+  },
+  {
+    "question": "Er en hjertestarter dækket af bygningsforsikringen?",
+    "type": "easy",
+    "files": ["betingelser-bygningsforsikring.pdf"],
+    "must_contain": "Fastmonteret hjertestarter"
+  },
+  {
+    "question": "Hvor mange timer skal min kuffert være forsinket, før erhvervsrejseforsikringen dækker?",
+    "type": "paraphrase",
+    "files": ["betingelser-erhvervsrejseforsikring.pdf"],
+    "must_contain": "forsinket mere end 3 timer"
+  },
+  {
+    "question": "Dækker tandforsikringen tandrensning?",
+    "type": "easy",
+    "files": ["betingelser-tandforsikring.pdf"],
+    "must_contain": "Forsikringen dækker tandrensning og eftersyn"
+  },
+  {
+    "question": "Hvordan bliver det afgjort, hvor stort et varigt mén jeg har efter en ulykke?",
+    "type": "paraphrase",
+    "files": ["betingelser-kollektiv-ulykkesforsikring.pdf"],
+    "must_contain": "vejledende méntabel"
+  },
+  {
+    "question": "Dækker varebilforsikringen, hvis chaufføren ikke har kørekort?",
+    "type": "paraphrase",
+    "files": [
+      "betingelser-varebilforsikring.pdf",
+      "betingelser-varebilforsikring-1906.pdf",
+      "betingelser-varebilforsikring-va13.pdf"
+    ],
+    "must_contain": "kørekort"
+  },
+  {
+    "question": "I hvilke lande gælder materielforsikringen?",
+    "type": "paraphrase",
+    "files": ["betingelser-materielforsikring.pdf"],
+    "must_contain": "4.1 Danmark Forsikringen dækker i Danmark"
+  },
+  {
+    "question": "Kan Tryg sætte prisen op på netbankforsikringen, efter jeg har anmeldt en skade?",
+    "type": "paraphrase",
+    "files": ["betingelser-netbankforsikring-dn1904.pdf"],
+    "must_contain": "med 14 dages varsel"
+  },
+  {
+    "question": "Hvem er dækket af patientforsikringen?",
+    "type": "easy",
+    "files": ["betingelser-patientforsikring.pdf"],
+    "must_contain": "under deres varetagelse af patientbehandling"
+  }
+]

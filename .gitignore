@@ -1,0 +1,25 @@
+# .gitignore
+# Files and folders git should NOT track.
+
+# --- Secrets (MOST IMPORTANT) ---
+# .env holds the database address and the OpenRouter API key.
+.env
+.env.*
+!.env.example
+
+# --- Source documents and generated data ---
+# The insurance PDFs are not ours to republish, and the chunk file is generated
+# from them. Download the PDFs yourself and put them in data/tryg/ (see README).
+data/
+
+# --- Python ---
+.venv/
+__pycache__/
+*.pyc
+
+# --- Frontend ---
+node_modules/
+dist/
+
+# --- macOS ---
+.DS_Store

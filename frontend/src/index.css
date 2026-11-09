@@ -1,0 +1,103 @@
+/* index.css
+   The base look of the app. Colours and sizes are defined ONCE as "variables"
+   (the --names below), and everything else uses them. The chat page's own styles
+   are in chatbot.css. */
+
+:root {
+  color-scheme: light;
+  --bg: #f7f5f4;
+  --surface: #ffffff;
+  --border: #e9e4e2;
+  --text: #231f20;
+  --muted: #6e6667;
+  /* The accent colour: used for the question bubble, the button and focus rings. */
+  --accent: #d8001c;
+  --accent-soft: #fde8ea;
+  --green: #0f7a46;
+  --green-soft: #e2f4ea;
+  --amber: #9a5600;
+  --amber-soft: #fff1d6;
+  --grey: #4e4748;
+  --grey-soft: #f0ecea;
+  --brand: #b00018;
+  --shadow: 0 1px 2px rgba(35, 31, 32, 0.06);
+  --radius: 10px;
+  --font: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.5 var(--font);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2 {
+  margin: 0;
+  line-height: 1.25;
+}
+
+/* The page: one centred column with room around it. */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 32px 16px 24px;
+}
+
+/* ---------- Page header ---------- */
+
+.page-header {
+  margin-bottom: 24px;
+}
+.page-header h1 {
+  font-size: 26px;
+  letter-spacing: -0.02em;
+}
+.meta {
+  margin-top: 8px;
+}
+
+/* ---------- Small helpers ---------- */
+
+.muted {
+  color: var(--muted);
+}
+.small {
+  font-size: 13px;
+}
+
+/* A small rounded label, e.g. "Betingelser" */
+.badge {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+.badge.grey {
+  background: var(--grey-soft);
+  color: var(--grey);
+}
+
+/* A message box: "Søger ..." or an error */
+.notice {
+  margin: 0;
+  padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--muted);
+}
+.notice.error {
+  background: var(--amber-soft);
+  border-color: transparent;
+  color: var(--amber);
+}
